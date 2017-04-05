@@ -1,0 +1,12 @@
+{
+    "name": "pascalgodin/whenever-php",
+    "description": ".",
+    "license": "MIT",
+    "require": {},
+    "autoload": {
+        "psr-4": {"Whenever\\": "lib/"}
+    },
+    "bin": [
+        "bin/wheneverize-php"
+    ]
+}
