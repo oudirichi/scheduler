@@ -1,13 +1,12 @@
 #!/usr/bin/env php
 <?php
 
-var_dump(dirname(__DIR__));
-die;
-var_dump(__DIR__.'/../../autoload.php');
-var_dump( __DIR__.'/vendor/autoload.php');
 
 if (file_exists(__DIR__.'/../../autoload.php')) {
     require __DIR__.'/../../autoload.php';
 } else {
     require __DIR__.'/vendor/autoload.php';
 }
+$app = new Symfony\Component\Console\Application('Scheduler', '0.0.1');
+$app->add(new Scheduler\Console\InstallCommand);
+$app->run();
