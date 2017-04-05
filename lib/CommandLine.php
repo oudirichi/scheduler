@@ -1,6 +1,6 @@
 <?php
 
-namespace Whenever;
+namespace Scheduler;
 
 class CommandLine {
   private $options = [];
@@ -34,7 +34,7 @@ class CommandLine {
     //   elsif @options[:write]
     //     write_crontab(whenever_cron)
     //   else
-    //     puts Whenever.cron(@options)
+    //     puts Scheduler.cron(@options)
     //     puts "## [message] Above is your schedule file converted to cron syntax; your crontab file was not updated."
     //     puts "## [message] Run `whenever --help' for more options."
     //     exit(0)
@@ -84,7 +84,7 @@ class CommandLine {
 
   function generate_cron() {
     if (!isset($this->generated_cron)) {
-      $this->generated_cron = implode("\n", [$this->comment_open(), CronManager::cron($this->options), $this->comment_close()]) . "\n";
+      $this->generated_cron = implode("\n", [$this->comment_open(), Scheduler::cron($this->options), $this->comment_close()]) . "\n";
     }
 
     return $this->generated_cron;

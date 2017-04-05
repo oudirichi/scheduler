@@ -1,8 +1,8 @@
 <?php
 
-namespace Whenever;
+namespace Scheduler;
 
-class CronManager {
+class Scheduler {
   static function cron($options) {
     return "#any new task";
   }

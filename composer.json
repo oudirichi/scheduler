@@ -1,12 +1,12 @@
 {
-    "name": "pascalgodin/whenever-php",
-    "description": ".",
+    "name": "pascalgodin/scheduler",
+    "description": "A PHP version of Whenever gem.",
     "license": "MIT",
     "require": {},
     "autoload": {
-        "psr-4": {"Whenever\\": "lib/"}
+        "psr-4": {"Scheduler\\": "lib/"}
     },
     "bin": [
-        "bin/wheneverize-php"
+        "bin/schedulerize"
     ]
 }
