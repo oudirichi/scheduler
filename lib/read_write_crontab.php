@@ -1,5 +1,7 @@
 <?php
-error_reporting(E_ALL);
+
+namespace Scheduler;
+
 class CronManager {
   static function cron($options) {
     return "#any new task";
@@ -132,20 +134,3 @@ class command_line {
 function read_crontab() {
   return shell_exec("crontab -l 2> /dev/null");
 }
-
-// $content = read_crontab();
-// var_dump(read_crontab());
-//
-// $content = preg_replace('/^# Begin Whenever generated tasks for:\s*$[\s\S]*?^# End Whenever generated tasks for:\s*$/m', '', $content);
-// var_dump(rtrim($content));
-//
-
-$content = "
-
-# Begin CronManager generated tasks for: /Users/pascalgodin/Documents/web_project/read_write_crontab.php
-#any task
-
-# End CronManager generated tasks for: /Users/pascalgodin/Documents/web_project/read_write_crontab.php
-";
-
-(new command_line([]));

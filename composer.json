@@ -4,9 +4,9 @@
     "license": "MIT",
     "require": {},
     "autoload": {
-        "psr-4": {"Whenever\\": "lib/"}
+        "psr-4": {"Scheduler\\": "lib/"}
     },
     "bin": [
-        "bin/wheneverize-php"
+        "bin/scheduler"
     ]
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Whenever;
+namespace Scheduler;
 
 class CronManager {
   static function cron($options) {
