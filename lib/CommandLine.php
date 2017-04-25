@@ -6,16 +6,15 @@ class CommandLine {
   private $options = [];
 
   function __construct(array $options) {
-    $this->options = array($options);
+    $this->options = (array) $options;
     $this->options["crontab_command"] = isset($this->options["crontab_command"]) ? $this->options["crontab_command"] : "crontab";
     $this->options["file"] = isset($this->options["file"]) ? $this->options["file"] : "config/schedule.php";
     $this->options["identifier"] = isset($this->options["identifier"]) ? $this->options["identifier"] : $this->default_identifier();
     $this->create_timestamp();
-    $this->run();
   }
 
   function default_identifier() {
-    return __FILE__;
+    return $this->options["path"] . "/" . $this->options["file"];
   }
 
   function create_timestamp() {
@@ -25,20 +24,21 @@ class CommandLine {
                 ->format('Y-m-d H:i:s');
   }
 
-  function run() {
-    $this->write_crontab($this->updated_crontab());
+  function run($output) {
+    $this->output = $output;
+    if (isset($this->options["clear"])) {
+      $this->write_crontab("");
+      exit(0);
+    }
 
-
-    //   if @options[:update] || @options[:clear]
-    //     write_crontab(updated_crontab)
-    //   elsif @options[:write]
-    //     write_crontab(whenever_cron)
-    //   else
-    //     puts Whenever.cron(@options)
-    //     puts "## [message] Above is your schedule file converted to cron syntax; your crontab file was not updated."
-    //     puts "## [message] Run `whenever --help' for more options."
-    //     exit(0)
-    //   end
+    if (isset($this->options["update"]) || isset($this->options["write"])) {
+      $this->write_crontab($this->updated_crontab());
+    } else if (isset($this->options["dry-run"])) {
+      $this->output->writeln("## [message] Above is your schedule file converted to cron syntax; your crontab file was not updated.");
+      $this->output->writeln(Scheduler::cron($this->options));
+      $this->output->writeln("## [message] Run `scheduler --help' for more options.");
+      exit(0);
+    }
   }
 
   function read_crontab() {
@@ -54,15 +54,19 @@ class CommandLine {
   }
 
   function write_crontab($content) {
-    echo $content;
+    $handle = popen('crontab -', 'r+');
+    fwrite($handle, $content);
+    fclose($handle);
 
-    // $handle = popen('crontab -', 'r+');
-    // fwrite($handle, $content);
-    // fclose($handle);
+    $this->output->writeln("[write] crontab file updated");
   }
 
   function updated_crontab() {
-    $read_crontab = $this->read_crontab();
+    $read_crontab = "";
+    if (!isset($this->options["clear"])) {
+      $read_crontab = $this->read_crontab();
+    }
+
     # Check for unopened or unclosed identifier blocks
     if (preg_match("/^{$this->regex_comment_open()}\s/m", $read_crontab) && !preg_match("/^{$this->regex_comment_close()}\s/m", $read_crontab)) {
       throw new \Exception("[fail] Unclosed indentifier; Your crontab file contains open but not close tag");
@@ -84,15 +88,14 @@ class CommandLine {
 
   function generate_cron() {
     if (!isset($this->generated_cron)) {
-      $this->generated_cron = implode("\n", [$this->comment_open(), CronManager::cron($this->options), $this->comment_close()]) . "\n";
+      $this->generated_cron = implode("\n", [$this->comment_open(), Scheduler::cron($this->options), $this->comment_close()]) . "\n";
     }
-
     return $this->generated_cron;
   }
 
 
   function comment_base($include_timestamp = true) {
-    $ret = "CronManager generated tasks for: " . $this->options["identifier"];
+    $ret = "Scheduler generated tasks for: " . $this->options["identifier"];
     if($include_timestamp)
       $ret. " at: " . $this->timestamp;
 
