@@ -5,12 +5,21 @@ namespace Scheduler;
 class CommandLine {
   private $options = [];
 
-  function __construct(array $options) {
+  function __construct($output, array $options) {
+    $this->output = $output;
+
     $this->options = (array) $options;
     $this->options["crontab_command"] = isset($this->options["crontab_command"]) ? $this->options["crontab_command"] : "crontab";
     $this->options["file"] = isset($this->options["file"]) ? $this->options["file"] : "config/schedule.php";
     $this->options["identifier"] = isset($this->options["identifier"]) ? $this->options["identifier"] : $this->default_identifier();
     $this->create_timestamp();
+
+    if (!file_exists($this->options["identifier"])) {
+      $output->writeln($this->options["identifier"] . " doesn't exist. Be sure to be in main folder");
+      exit(1);
+    }
+
+    require $this->options["identifier"];
   }
 
   function default_identifier() {
@@ -20,12 +29,11 @@ class CommandLine {
   function create_timestamp() {
     $timezone = new \DateTimeZone('UTC');
     $this->timestamp = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), $timezone)
-                ->setTimezone($timezone)
-                ->format('Y-m-d H:i:s');
+      ->setTimezone($timezone)
+      ->format('Y-m-d H:i:s');
   }
 
-  function run($output) {
-    $this->output = $output;
+  function run() {
     if (isset($this->options["clear"])) {
       $this->write_crontab("");
       exit(0);

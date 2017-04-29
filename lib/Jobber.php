@@ -26,7 +26,7 @@ class Jobber
   {
     if (array_key_exists($name, $this->jobs)) {
       $template = $this->jobs[$name];
-      $this->memory[] = ["argument" => $arguments[0], "template" => $template];
+      $this->memory[] = (object) ["argument" => $arguments[0], "template" => $template];
     }
   }
 }

@@ -1,10 +1,52 @@
 #!/usr/bin/env php
 <?php
 
-if (file_exists(__DIR__.'/../../../autoload.php')) {
-  require __DIR__.'/../../../autoload.php';
-} else {
-  require __DIR__.'/vendor/autoload.php';
+// if (file_exists(__DIR__.'/../../../autoload.php')) {
+//   require __DIR__.'/../../../autoload.php';
+// } else {
+//   require __DIR__.'/vendor/autoload.php';
+// }
+require __DIR__ . "/../vendor/autoload.php";
+
+use Symfony\Component\Process\Process;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class schedulerizeCommand extends Command
+{
+  protected function configure()
+  {
+    $this
+      ->setName("schedulerize")
+      ->setDescription('Initialize scheduler.');
+  }
+
+  protected function execute(InputInterface $input, OutputInterface $output)
+  {
+    $currentDirectory = getcwd();
+    $configPath = $currentDirectory . "/config";
+    if (!is_dir($configPath)) {
+      $output->writeln("Creating config folder...");
+      mkdir($configPath, 0755);
+    }
+
+    $schedulePath = $configPath . "/schedule.php";
+
+    if (!file_exists($schedulePath)) {
+      $output->writeln("Creating 'schedule.php' file...");
+      copy(dirname(__DIR__) . "/template/schedule.php", $schedulePath);
+      chmod($schedulePath, 0755);
+    }
+
+    $output->writeln("<INFO>Everything done! Enjoy!</INFO>");
+  }
 }
 
-Scheduler\Scheduler::install(getcwd());
+$app = new Symfony\Component\Console\Application('Scheduler', '1.0.0');
+$command = new schedulerizeCommand();
+$app->add($command);
+$app->setDefaultCommand($command->getName(), true);
+$app->run();

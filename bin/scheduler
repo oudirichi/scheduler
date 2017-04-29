@@ -1,10 +1,96 @@
 #!/usr/bin/env php
 <?php
 
-if (file_exists(__DIR__.'/../../../autoload.php')) {
-    require __DIR__.'/../../../autoload.php';
-} else {
-    require __DIR__.'/vendor/autoload.php';
+// if (file_exists(__DIR__.'/../../../autoload.php')) {
+//     require __DIR__.'/../../../autoload.php';
+// } else {
+//     require __DIR__.'/vendor/autoload.php';
+// }
+require __DIR__ . "/../vendor/autoload.php";
+
+use Symfony\Component\Process\Process;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class schedulerCommand extends Command
+{
+  protected function configure()
+  {
+    $this
+      ->setName("installer")
+      ->setDescription('Initialize scheduler.')
+      ->addOption(
+        "update-crontab",
+        '-i',
+        InputOption::VALUE_NONE,
+        'update crontab with config file'
+      )
+      ->addOption(
+        "write-crontab",
+        '-w',
+        InputOption::VALUE_NONE,
+        'clear crontab and adding config file'
+      )
+      ->addOption(
+        "dry-run",
+        '-l',
+        InputOption::VALUE_NONE,
+        'list schedule file as cron syntax'
+      )
+      ->addOption(
+        "clear-crontab",
+        '-c',
+        InputOption::VALUE_NONE,
+        'clear full crontab'
+      )
+      ->addOption(
+        "load-file",
+        '-f',
+        InputOption::VALUE_REQUIRED,
+        'Default: config/schedule.rb'
+      );
+      // ->addOption(
+      //     'user',
+      //     '-u',
+      //     InputArgument::REQUIRED,
+      //     'Default: current user'
+      // );
+
+  }
+
+  protected function execute(InputInterface $input, OutputInterface $output)
+  {
+    $arguments = [];
+    $arguments["path"] = getcwd();
+
+    if ($input->getOption("dry-run")) {
+      $arguments["dry-run"] = true;
+    }
+    else if ($input->getOption("update-crontab")) {
+      $arguments["update"] = true;
+    }
+    else if ($input->getOption("clear-crontab")) {
+      $arguments["clear"] = true;
+    }
+    else if ($input->getOption("write-crontab")) {
+      $arguments["write"] = true;
+    } else {
+      $arguments["dry-run"] = true;
+    }
+
+    if ($input->getOption("load-file")) {
+      $arguments["file"] = $input->getOption("load-file");
+    }
+
+    Scheduler\Scheduler::run($output, $arguments);
+  }
 }
 
-Scheduler\Scheduler::run(getcwd());
+$app = new Symfony\Component\Console\Application('Scheduler', '1.0.0');
+$command = new schedulerCommand();
+$app->add($command);
+$app->setDefaultCommand($command->getName(), true);
+$app->run();
