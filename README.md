@@ -46,3 +46,15 @@ Scheduler\every("* * * * *", function($cron) {
 });
 
 ```
+
+## Cron format
+```
+* * * * * *
+| | | | | |
+| | | | | +-- Year              (range: 1900-3000)
+| | | | +---- Day of the Week   (range: 0-6 OR 1-7, 0 and 7 both stand for Sunday)
+| | | +------ Month of the Year (range: 1-12)
+| | +-------- Day of the Month  (range: 1-31)
+| +---------- Hour              (range: 0-23)
++------------ Minute            (range: 0-59)
+```

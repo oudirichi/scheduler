@@ -12,5 +12,6 @@
     "bin": [
         "bin/scheduler",
         "bin/schedulerize"
-    ]
+    ],
+    "minimum-stability": "dev"
 }
