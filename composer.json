@@ -1,5 +1,5 @@
 {
-    "name": "pascalgodin/scheduler",
+    "name": "oudirichi/scheduler",
     "description": "A PHP version of Whenever gem.",
     "license": "MIT",
     "require": {
@@ -13,5 +13,6 @@
         "bin/scheduler",
         "bin/schedulerize"
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
