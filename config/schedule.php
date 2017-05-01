@@ -8,7 +8,6 @@ Scheduler::push("pewpew", "cd :path && :task");
 Scheduler::push("command", ":task");
 
 Scheduler::every("* * * * *", function ($cron) {
-    // and use them
-    // $cron->command("...");
-    // $cron->pewpew('echo "pewpew" >> log/test.log');
+    $cron->command("...");
+    $cron->pewpew('echo "pewpew" >> log/test.log');
 });
