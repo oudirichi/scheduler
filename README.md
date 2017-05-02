@@ -39,12 +39,13 @@ $ scheduler --update-crontab
 ## Define your own job types
 ```php
 <?php
-Scheduler\job_type("pewpew", "cd :path && :task");
+Scheduler::jobType("pewpew", "cd :path && :task");
+Scheduler::jobType("command", ":task");
 
-Scheduler\every("* * * * *", function($cron) {
-  $cron->pewpew('echo "pewpew" >> log/test.log');
+Scheduler::every("* * * * *", function ($cron) {
+    $cron->command("...");
+    $cron->pewpew('echo "pewpew" >> log/test.log');
 });
-
 ```
 
 ## Cron format

@@ -1,11 +1,14 @@
 <?php
+require __DIR__.'/../vendor/autoload.php';
 
-  // Define new job with job_type
-  Scheduler\job_type("pewpew", "cd :path && :task");
-  Scheduler\job_type("command", ":task");
+use Scheduler\Scheduler;
 
-  Scheduler\every("* * * * *", function($cron) {
+// Define new job with jobType
+Scheduler::jobType("pewpew", "cd :path && :task");
+Scheduler::jobType("command", ":task");
+
+Scheduler::every("* * * * *", function ($cron) {
     // and use them
     // $cron->command("...");
     // $cron->pewpew('echo "pewpew" >> log/test.log');
-  });
+});

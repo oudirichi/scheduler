@@ -6,8 +6,7 @@
       "symfony/console": "~2.3|~3.0"
     },
     "autoload": {
-        "psr-4": {"Scheduler\\": "lib/"},
-        "files": ["lib/functions.php"]
+        "psr-4": {"Scheduler\\": "lib/"}
     },
     "bin": [
         "bin/scheduler",
