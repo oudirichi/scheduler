@@ -68,7 +68,7 @@ class Scheduler
         return static::getInstance()->pushCron($time, $callback);
     }
 
-    public static function push($name, $job)
+    public static function jobType($name, $job)
     {
         return static::getInstance()->pushJob($name, $job);
     }

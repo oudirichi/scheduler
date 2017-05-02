@@ -3,9 +3,9 @@ require __DIR__.'/../vendor/autoload.php';
 
 use Scheduler\Scheduler;
 
-// Define new job with job_type
-Scheduler::push("pewpew", "cd :path && :task");
-Scheduler::push("command", ":task");
+// Define new job with jobType
+Scheduler::jobType("pewpew", "cd :path && :task");
+Scheduler::jobType("command", ":task");
 
 Scheduler::every("* * * * *", function ($cron) {
     // and use them
